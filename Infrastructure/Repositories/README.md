@@ -32,19 +32,19 @@ Objetivo: Implementar o Repository Pattern para a entidade `Produto`.
 
 ## -Quando NÃO usar repository pattern
    Em projetos pequenos ou APIs minimalistas, onde tem pouca consulta e poucas coisas para guardar.
-   O DbContext do EF core ja consegue fazer tudo sozinho, então criar  o Repository seria só trabalho extra.
-   Em sistemas maiores, com muitas regras de negócio e multiplos lugares para salvar dados, ai sim vale muito apena.
+   O DbContext do EF core já consegue fazer tudo sozinho, então criar o Repository seria só trabalho extra.
+   Em sistemas maiores, com muitas regras de negócio e multiplos lugares para salvar dados, ai sim vale muito a pena.
 
    VANTAGENS DO REPOSITORY:
-   Matem o codigo organizado, organiza em camadas
-   O  service não precisa se preocupar com detalhes do banco de dados
-   Facilita testes e mudanças futuras no banco de dados sem bagunçar a aplicação
+   Mantém o codigo organizado, organiza em camadas.
+   O service não precisa se preocupar com detalhes do banco de dados.
+   Facilita testes e mudanças futuras no banco de dados sem bagunçar a aplicação.
 
    DESVANTAGENS:
-   Para APIs simples,  pode acabar gerando codigo extra e desnecessário
-   O DbContext ja tem metodos parecidos, então as vezes é so um extra que não é estritamente necessário
+   Para APIs simples, pode acabar gerando codigo extra e desnecessário.
+   O DbContext ja tem metodos parecidos, então as vezes é so um extra que não é estritamente necessário.
 
    OBSERVAÇÃO:
-   Aqui dentro do Repository só mexemos com dados, criar, ler, remover e salvar
-   As regras de negocio devem ficar em camadas diferentes, como Service e Factory
+   Aqui dentro do Repository só mexemos com dados, criar, ler, remover e salvar.
+   As regras de negocio devem ficar em camadas diferentes, como Service e Factory.
 
