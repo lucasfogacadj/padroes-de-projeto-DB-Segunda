@@ -1,14 +1,21 @@
 namespace Application.Services;
 
-// TODO (Grupo Factory): Centralizar criação de Produto garantindo invariantes.
-// Sugestões de validação: nome não vazio, descricao não vazia, preco > 0, estoque >= 0.
-// Discutir se deve lançar ArgumentException, DomainException custom ou retornar Result.
-// Explicar no PR por que uma Factory faz sentido (ou se seria overkill neste tamanho) — reflexão.
 public static class ProdutoFactory
 {
     public static Produto Criar(string nome, string descricao, decimal preco, int estoque)
     {
-        // TODO: Implementar regras e retornar instância pronta.
-        throw new NotImplementedException();
+        if (string.IsNullOrWhiteSpace(nome))
+            throw new ArgumentException("O nome do produto é obrigatório.", nameof(nome));
+
+        if (string.IsNullOrWhiteSpace(descricao))
+            throw new ArgumentException("A descrição do produto é obrigatória.", nameof(descricao));
+
+        if (preco <= 0)
+            throw new ArgumentException("O preço deve ser maior que zero.", nameof(preco));
+
+        if (estoque < 0)
+            throw new ArgumentException("O estoque não pode ser negativo.", nameof(estoque));
+
+        return new Produto(nome, descricao, preco, estoque);
     }
 }

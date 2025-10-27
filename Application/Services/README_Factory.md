@@ -20,3 +20,4 @@ Objetivo: Garantir criação consistente de `Produto` encapsulando invariantes e
 ## Entrega
 - Branch: `feature/factory`.
 - Explicar em comentário final: Quando uma Factory seria overengineering?
+R: Justamente no mesmo contexto que esse código, como é apenas um jeito simples de registrar um produto o próprio serivce faz o trabalho. Seria recomendado utilizar em situações aonde existem mais de uma forma de registrar os produtos, um exemplo é com usuários (Admin, Cliente, Vendedor etc.) além de disso existe outros métodos, caso precise fazer requisições externas em alguma API, ou validação para tipos de produto que dependem de variaveis diferente como produto digital que é diferente de um produto físico que é diferente de um produto por assinatura.
