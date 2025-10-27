@@ -1,15 +1,34 @@
 using Application.DTOs;
+using Domain.Entities;
 
-namespace Application.Services;
-
-// TODO (Grupo DTO/Mapping): Implementar conversão de Produto -> ProdutoReadDto.
-// Discutir se mapping manual é suficiente ou se vão demonstrar o uso de AutoMapper (opcional).
-// Possível extensão: adicionar campo calculado no DTO.
-public static class MappingExtensions
+namespace Application.Services
 {
-    public static ProdutoReadDto ToReadDto(this Produto p)
+    public static class MappingExtensions
     {
-        // TODO: retornar nova instância de ProdutoReadDto usando p (mapping manual inicial).
-        throw new NotImplementedException();
+        // converte entidade em DTO de leitura
+        public static ProdutoReadDto ToReadDto(this Produto p)
+        {
+            return new ProdutoReadDto(
+                p.Id,
+                p.Nome,
+                p.Descricao,
+                p.Preco,
+                p.Estoque,
+                p.DataCriacao
+            );
+        }
+
+        // converte DTO de criação em entidade
+        public static Produto ToEntity(this ProdutoCreateDto dto)
+        {
+            return new Produto
+            {
+                Nome = dto.Nome,
+                Descricao = dto.Descricao,
+                Preco = dto.Preco,
+                Estoque = dto.Estoque,
+                DataCriacao = DateTime.UtcNow
+            };
+        }
     }
 }
