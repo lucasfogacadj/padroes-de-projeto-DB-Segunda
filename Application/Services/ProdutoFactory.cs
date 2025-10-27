@@ -15,7 +15,11 @@ public static class ProdutoFactory
 
         if (estoque < 0)
             throw new ArgumentException("O estoque não pode ser negativo.", nameof(estoque));
-
-        return new Produto(nome, descricao, preco, estoque);
+        var produto = new Produto();
+        produto.Nome = nome;
+        produto.Descricao = descricao;
+        produto.Preco = preco;
+        produto.Estoque = estoque;
+        return produto;
     }
 }
