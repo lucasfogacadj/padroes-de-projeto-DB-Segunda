@@ -9,34 +9,53 @@ namespace Application.Services;
 public class ProdutoService : IProdutoService
 {
     private readonly IProdutoRepository _repo;
+    private readonly ProdutoFactory _factory;
 
     public ProdutoService(IProdutoRepository repo)
     {
         _repo = repo;
+        _factory = factory;
     }
 
-    public Task<IEnumerable<Produto>> ListarAsync(CancellationToken ct = default)
+    public async Task<IEnumerable<Produto>> ListarAsync(CancellationToken ct = default)
     {
-        // TODO: Adicionar possibilidade de filtros futuros (Specification Pattern em fases posteriores)
-        throw new NotImplementedException();
+        return await _repo.GetAllAsync(ct);
     }
 
     public Task<Produto?> ObterAsync(int id, CancellationToken ct = default)
     {
-        // TODO: Validar id > 0 e talvez normalizar algum aspecto.
-        throw new NotImplementedException();
+        if (id <= 0)
+            throw new ArgumentException("ID inválido");
+
+        return await _repo.GetByIdAsync(id, ct);
     }
 
     public Task<Produto> CriarAsync(string nome, string descricao, decimal preco, int estoque, CancellationToken ct = default)
     {
-        // TODO: Integrar com ProdutoFactory.Criar e depois persistir via repository.
-        // TODO: Tratar regras: nome não vazio, preço > 0, estoque >= 0, trimming.
-        throw new NotImplementedException();
+        if (string.IsNullOrWhiteSpace(nome))
+            throw new ArgumentException("Nome é obrigatório");
+
+        if (preco <= 0)
+            throw new ArgumentException("Preço deve ser maior que zero");
+
+        if (estoque < 0)
+            throw new ArgumentException("Estoque não pode ser negativo");
+
+        // Criação do produto via Factory
+        var produto = _factory.Criar(nome.Trim(), descricao?.Trim() ?? "", preco, estoque);
+
+        await _repo.AddAsync(produto, ct);
+        await _repo.SaveChangesAsync(ct);
+
+        return produto;
     }
 
     public Task<bool> RemoverAsync(int id, CancellationToken ct = default)
     {
-        // TODO: Buscar, validar existência e remover.
-        throw new NotImplementedException();
+        var produto = await _repo.GetByIdAsync(id, ct);
+        if(produto == null) return false;
+        repo.Delete(produto);
+        await _repo.SaveChangesAsync(ct);
+        return true;
     }
 }
