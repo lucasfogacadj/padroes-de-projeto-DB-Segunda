@@ -25,3 +25,15 @@ Objetivo: Centralizar regras de negócio e orquestração entre Repository, Fact
 - Branch: `feature/service`
 - README (este) pode ser atualizado com decisões.
 - (Opcional) Teste unitário simulando repository (mock ou fake in-memory).
+
+🧠 Decisões do Grupo
+
+O ProdutoService centraliza toda a lógica de negócio, mantendo Repository e Factory com responsabilidades distintas.
+
+Optamos por usar exceções para tratar erros de validação, pela simplicidade e clareza ao integrar com os controladores.
+
+Foram aplicadas apenas regras mínimas (nome, preço e estoque válidos); demais validações ficam com o grupo de FluentValidation.
+
+Métodos retornam diretamente objetos Produto, garantindo um padrão simples e fácil de testar.
+
+As escolhas priorizam baixa dependência entre camadas, testabilidade e clareza na manutenção futura.
