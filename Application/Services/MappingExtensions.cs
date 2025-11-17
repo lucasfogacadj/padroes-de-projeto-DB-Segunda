@@ -17,6 +17,15 @@ namespace Application.Services
                 p.DataCriacao
             );
         }
+        public static ProdutoCreateDto ToCreateDto(this Produto p)
+        {
+            return new ProdutoCreateDto(
+                p.Nome,
+                p.Descricao,
+                p.Preco,
+                p.Estoque
+            );
+        }
 
         // converte DTO de criação em entidade
         public static Produto ToEntity(this ProdutoCreateDto dto)
@@ -30,5 +39,6 @@ namespace Application.Services
                 DataCriacao = DateTime.UtcNow
             };
         }
+        
     }
 }

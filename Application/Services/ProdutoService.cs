@@ -54,4 +54,47 @@ public class ProdutoService : IProdutoService
         await _repo.RemoveAsync(produto);
         return true;
     }
+
+    public async Task<Produto> AtualizarAsync(int id, Produto produto, CancellationToken ct = default)
+    {
+        var produtoEncontrado = await _repo.GetByIdAsync(id, ct);
+        if (produtoEncontrado == null) return null;
+        produtoEncontrado.Nome = produto.Nome;
+        produtoEncontrado.Descricao = produto.Descricao;
+        produtoEncontrado.Preco = produto.Preco;
+        produtoEncontrado.Estoque = produto.Estoque;
+
+        await _repo.UpdateAsync(produtoEncontrado, ct);
+        await _repo.SaveChangesAsync(ct);
+        return produtoEncontrado;
+    
+    }
+
+    public async Task<ProdutoCreateDto?> AtualizarParcialAsync(int id, Produto produto, CancellationToken ct = default)
+    {
+        var produtoAtualizado = await _repo.GetByIdAsync(id, ct);
+        if (produtoAtualizado == null) return null;
+        if (!String.IsNullOrWhiteSpace(produto.Nome))
+        {
+            produtoAtualizado.Nome = produto.Nome;
+        }
+        if (!String.IsNullOrWhiteSpace(produto.Descricao))
+        {
+            produtoAtualizado.Descricao = produto.Descricao;
+        }
+        if (produto.Preco != 0)
+        {
+            produtoAtualizado.Preco = produto.Preco;
+        }
+        if (produto.Estoque != 0)
+        {
+            produtoAtualizado.Estoque = produto.Estoque;
+        }
+
+        await _repo.UpdateAsync(produtoAtualizado, ct);
+        await _repo.SaveChangesAsync(ct);
+        return MappingExtensions.ToCreateDto(produtoAtualizado);
+    }
+
+
 }

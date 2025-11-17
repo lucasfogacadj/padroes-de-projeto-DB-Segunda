@@ -1,6 +1,7 @@
 using Application.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using SQLitePCL;
 
 namespace Infrastructure.Repositories;
 
@@ -27,7 +28,7 @@ public class ProdutoRepository : IProdutoRepository
     public async Task<Produto?> GetByIdAsync(int id, CancellationToken ct = default)
     {
         // Busca uma entidade específica no banco de dados através do seu id usando FindAsync.
-        return await _context.Produtos.FindAsync(id, ct);
+        return await _context.Produtos.FirstOrDefaultAsync(p => p.Id == id, ct);
     }
 
     public async Task AddAsync(Produto produto, CancellationToken ct = default)
@@ -48,5 +49,11 @@ public class ProdutoRepository : IProdutoRepository
     public async Task SaveChangesAsync(CancellationToken ct = default)
     {
         await _context.SaveChangesAsync(ct);
+    }
+
+    public Task UpdateAsync(Produto produto, CancellationToken ct = default)
+    {
+        _context.Update(produto);
+        return Task.CompletedTask;
     }
 }
