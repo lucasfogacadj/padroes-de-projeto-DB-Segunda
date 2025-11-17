@@ -3,6 +3,7 @@ using System.Runtime.Intrinsics.Arm;
 using Application.DTOs;
 using Application.Interfaces;
 using Application.Services;
+using FluentValidation;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,6 +15,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite("Data Source=app.db"));
 builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
 builder.Services.AddScoped<IProdutoService, ProdutoService>();
+builder.Services.AddValidatorsFromAssemblyContaining<ProdutoCreateDtoValidator>();
 var app = builder.Build();
 
 //Get Listar todos os produtos.
@@ -28,13 +30,19 @@ app.MapGet("/produtos/{id}", async (int id, IProdutoService service, Cancellatio
     return produto != null ? Results.Ok(produto) : Results.NotFound();
 });
 //post criar produto
-app.MapPost("/produtos", async (ProdutoCreateDto produtoDto, IProdutoService service, CancellationToken ct) =>
+app.MapPost("/produtos", async (ProdutoCreateDto produtoDto, IProdutoService service, CancellationToken ct, IValidator<ProdutoCreateDto> validator) =>
 {
+    //Valida o DTO antes de processar
+    var validationResult = await validator.ValidateAsync(produtoDto, ct);
+    if (!validationResult.IsValid)
+    {
+        return Results.ValidationProblem(validationResult.ToDictionary());
+    }
     var produto = await service.CriarAsync(produtoDto.Nome, produtoDto.Descricao, produtoDto.Preco, produtoDto.Estoque);
     return Results.Created($"/produtos/{produto.Id}", produto);
 });
 
-app.MapPut("/produtos/{id}", async (int id, Produto produto, IProdutoService service, CancellationToken ct) =>
+app.MapPut("/produtos/{id}", async (int id, ProdutoCreateDto produto, IProdutoService service, CancellationToken ct) =>
 {
     var produtoDosGuri = await service.AtualizarAsync(id, produto, ct);
     if (produtoDosGuri == null) return Results.NotFound();

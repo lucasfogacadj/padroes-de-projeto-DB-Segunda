@@ -55,7 +55,7 @@ public class ProdutoService : IProdutoService
         return true;
     }
 
-    public async Task<Produto> AtualizarAsync(int id, Produto produto, CancellationToken ct = default)
+    public async Task<Produto> AtualizarAsync(int id, ProdutoCreateDto produto, CancellationToken ct = default)
     {
         var produtoEncontrado = await _repo.GetByIdAsync(id, ct);
         if (produtoEncontrado == null) return null;
